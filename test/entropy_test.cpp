@@ -98,3 +98,20 @@ TEST(EntropyTest, jointEntropyMismatchedSize)
    ASSERT_THROW(joint_entropy(rv1, rv2), std::invalid_argument);
    ASSERT_THROW(joint_entropy(rv2, rv1), std::invalid_argument);
 }
+
+TEST(EntropyTest, conditionalEntropyIndependentRVs)
+{
+   std::vector<int> rv1 = {0,0,1,1};
+   std::vector<int> rv2 = {1,2,1,2};
+
+   ASSERT_EQ(conditional_entropy(rv1, rv2), entropy(rv1));
+}
+
+TEST(EntropyTest, conditionalEntropyDependentRVs)
+{
+   std::vector<int> rv1 = {1,1,0,0};
+   std::vector<int> rv2 = {1,1,1,2};
+
+   ASSERT_EQ(conditional_entropy(rv1,rv1), 0.0);
+   ASSERT_LT(conditional_entropy(rv1,rv2), entropy(rv1));
+}

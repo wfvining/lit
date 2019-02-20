@@ -60,7 +60,13 @@ template <typename T1, typename T2>
 double conditional_entropy(const std::vector<T1>& signal1,
                            const std::vector<T2>& signal2)
 {
-   return 0;
+   if(signal1.size() != signal2.size())
+   {
+      throw std::invalid_argument("samples must be the same length");
+   }
+
+   // H(Y|X) = H(X,Y) - H(X)
+   return joint_entropy(signal1, signal2) - entropy(signal2);
 }
 
 #endif // _LIT_ENTROPY_HPP
