@@ -56,7 +56,7 @@ TEST(EntropyTest, enumRandomVariable)
    ASSERT_EQ(entropy(rv), 2.0);
 }
 
-TEST(EntropyTest, jointEntropyIndependent)
+TEST(JointEntropyTest, independentRVs)
 {
    std::vector<int> rv1;
    std::vector<int> rv2;
@@ -69,7 +69,7 @@ TEST(EntropyTest, jointEntropyIndependent)
       << "H(X,Y) = H(X) + H(Y) if X and Y are independent";
 }
 
-TEST(EntropyTest, jointEntropyDependent)
+TEST(JointEntropyTest, dependentRVs)
 {
    std::vector<int> rv1;
    std::vector<int> rv2;
@@ -83,7 +83,7 @@ TEST(EntropyTest, jointEntropyDependent)
       << "joint entropy of dependent r.v.s should be less than the sum of their entropies.";
 }
 
-TEST(EntropyTest, jointEntropyWithSelf)
+TEST(JointEntropyTest, jointEntropyWithSelf)
 {
    std::vector<int> rv = {1,2,3,4,3,2,1};
 
@@ -91,7 +91,7 @@ TEST(EntropyTest, jointEntropyWithSelf)
       << "joint entropy of dependent r.v.s should be less than the sum of their entropies.";
 }
 
-TEST(EntropyTest, jointEntropyMismatchedSize)
+TEST(JointEntropyTest, mismatchedSizeCausesException)
 {
    std::vector<int> rv1 = {1,34,1,56,1,5,6,3,5};
    std::vector<int> rv2 = {1,4,12,54,2,1,1,1};
@@ -99,7 +99,7 @@ TEST(EntropyTest, jointEntropyMismatchedSize)
    ASSERT_THROW(joint_entropy(rv2, rv1), std::invalid_argument);
 }
 
-TEST(EntropyTest, conditionalEntropyIndependentRVs)
+TEST(ConditionalEntropyTest, independentRVs)
 {
    std::vector<int> rv1 = {0,0,1,1};
    std::vector<int> rv2 = {1,2,1,2};
@@ -107,11 +107,17 @@ TEST(EntropyTest, conditionalEntropyIndependentRVs)
    ASSERT_EQ(conditional_entropy(rv1, rv2), entropy(rv1));
 }
 
-TEST(EntropyTest, conditionalEntropyDependentRVs)
+TEST(ConditionalEntropyTest, dependentRVs)
 {
    std::vector<int> rv1 = {1,1,0,0};
    std::vector<int> rv2 = {1,1,1,2};
 
-   ASSERT_EQ(conditional_entropy(rv1,rv1), 0.0);
    ASSERT_LT(conditional_entropy(rv1,rv2), entropy(rv1));
+}
+
+TEST(ConditionalEntropyTest, conditionalEntropySelfIsZero)
+{
+   std::vector<int> rv1 = {1,1,0,0};
+
+   ASSERT_EQ(conditional_entropy(rv1,rv1), 0.0);
 }
